@@ -14,18 +14,21 @@
 
 import asyncio
 import argparse
-from scraping_agent.agent.runner import run_agent, get_system_prompt
+from scraping_agent.agent.runner import get_system_prompt, research
 from scraping_agent.llm.ollama import get_ollama_llm
 from scraping_agent.browser.session import get_browser_session
 
 async def async_main(model: str, prompt: str) -> None:
     llm = get_ollama_llm(model=model)
     browser = get_browser_session(headless=True)
-    result = await run_agent(task=prompt, llm=llm, browser=browser, extend_system_message=get_system_prompt())
-    print(result)
+    try:
+        result = await research(task=prompt, llm=llm, browser=browser, extend_system_message=get_system_prompt(), use_thinking=False, use_vision=False , max_actions_per_step=3, max_steps=12, max_iterations=3, max_retries=1)
+        print(result.model_dump_json(indent=2))
+    finally:
+        await browser.kill()
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Web scraping and search agent")
+    parser = argparse.ArgumentParser(description="Web research and scraping agent")
     _ = parser.add_argument("--model", "-m", type=str, required=True, help="Ollama model name")
     _ = parser.add_argument("--prompt", "-p", type=str, required=True, help="Task prompt")
 

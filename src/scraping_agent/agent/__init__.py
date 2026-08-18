@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from scraping_agent.agent.runner import get_system_prompt, run_agent
+from scraping_agent.agent.runner import get_system_prompt, research, run_agent
 
-__all__ = ["get_system_prompt", "run_agent"]
+__all__ = ["get_system_prompt", "research", "run_agent"]

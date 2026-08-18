@@ -3,7 +3,7 @@ name = "scraping-agent"
 version = "0.1.0"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-description = "An agent for automated web search and scraping using local language models"
+description = "An agent for automated web research and scraping using local language models"
 readme = "README.md"
 authors = [
     { name = "Aman Kumar Singh", email = "amankumarsingh.professional@gmail.com" }

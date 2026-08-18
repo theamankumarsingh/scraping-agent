@@ -14,9 +14,6 @@
 
 from browser_use import Browser
 
-def get_browser_session(headless: bool = False, disable_security: bool = False) -> Browser:
-    browser = Browser(
-        headless=headless,
-        disable_security=disable_security,
-    )
+def get_browser_session(headless: bool = False, disable_security: bool = False, keep_alive: bool = True) -> Browser:
+    browser = Browser(headless=headless, disable_security=disable_security, keep_alive=keep_alive)
     return browser

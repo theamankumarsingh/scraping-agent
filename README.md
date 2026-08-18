@@ -1,10 +1,43 @@
 # scraping-agent
 
-A CLI tool that uses an Ollama model (local or remote) to search websites and scrape information.
+A CLI web **researcher and scraper** powered by Ollama models (local or remote).
 
 ## About
 
-`scraping-agent` helps you automate web lookup and data extraction from the command line.
+`scraping-agent` automates iterative web research and scraping from the command line:
+
+- searches and browses relevant pages,
+- extracts evidence-backed findings with source URLs,
+- tracks unresolved requirements,
+- and stops when research is complete (or iteration limits are reached).
+
+## Current implementation
+
+### System architecture (simplified)
+
+```text
+CLI Prompt
+   │
+   ▼
+main.py
+   │
+   ▼
+research() orchestrator
+   │
+   ▼
+ResearchState
+   │
+   ▼
+Research Agent (LLM + Browser) -> ResearchResult
+   │
+   ▼
+Task Checker (LLM only) -> IntrospectionResult
+   │
+   ▼
+unresolved empty OR max_iterations reached?
+   ├─ Yes -> Final ResearchState JSON
+   └─ No  -> Research again
+```
 
 ## Dependencies
 
@@ -46,6 +79,8 @@ export OLLAMA_BASE_URL="http://your-ollama-host:11434"
 ```bash
 uv run scraping-agent --model "qwen3.5:4b" --prompt "Who is the current president of India?"
 ```
+
+The CLI prints the final `ResearchState` as formatted JSON.
 
 ## License
 

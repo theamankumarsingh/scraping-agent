@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from browser_use import ChatOllama
+from pydantic import BaseModel, Field
 
-def get_ollama_llm(model: str, base_url: str | None = None, num_ctx: int = 16384, temperature: float = 0) -> ChatOllama:
-    llm = ChatOllama(model=model, host=base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"), ollama_options={"num_ctx": num_ctx, "temperature": temperature})
-    return llm
+class Finding(BaseModel):
+    claim: str
+    url: str
+
+class ResearchState(BaseModel):
+    objective: str
+    findings: list[Finding] = Field(default_factory=list)
+    unresolved: list[str] = Field(default_factory=list)
+    visited_urls: set[str] = Field(default_factory=set)
+    iterations: int = 0
+    retries: int = 0
+
+class ResearchResult(BaseModel):
+    findings: list[Finding] = Field(default_factory=list)
+
+class IntrospectionResult(BaseModel):
+    unresolved: list[str] = Field(default_factory=list)

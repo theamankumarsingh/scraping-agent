@@ -15,6 +15,6 @@
 import os
 from browser_use import ChatOllama
 
-def get_ollama_llm(model: str, base_url: str | None = None, num_ctx: int = 16384, temperature: float = 0) -> ChatOllama:
+def get_ollama_llm(model: str, base_url: str | None = None, num_ctx: int = 65536, temperature: float = 0) -> ChatOllama:
     llm = ChatOllama(model=model, host=base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"), ollama_options={"num_ctx": num_ctx, "temperature": temperature})
     return llm

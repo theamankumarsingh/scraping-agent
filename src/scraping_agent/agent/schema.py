@@ -31,3 +31,6 @@ class ResearchResult(BaseModel):
 
 class IntrospectionResult(BaseModel):
     unresolved: list[str] = Field(default_factory=list)
+
+class PlanningResult(BaseModel):
+    unresolved: list[str] = Field(default_factory=list)

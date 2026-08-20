@@ -6,9 +6,10 @@ A CLI web **researcher and scraper** powered by Ollama models (local or remote).
 
 `scraping-agent` automates iterative web research and scraping from the command line:
 
+- breaks the objective into smaller unresolved tasks,
 - searches and browses relevant pages,
 - extracts evidence-backed findings with source URLs,
-- tracks unresolved requirements,
+- tracks remaining unresolved tasks against the overall objective,
 - and stops when research is complete (or iteration limits are reached).
 
 ## Current implementation
@@ -25,7 +26,10 @@ main.py
 research() orchestrator
    │
    ▼
-ResearchState
+ResearchState initialized (objective, unresolved=[objective])
+   │
+   ▼
+Planner (LLM only) -> try break objective into smaller unresolved tasks
    │
    ▼
 Research Agent (LLM + Browser) -> ResearchResult

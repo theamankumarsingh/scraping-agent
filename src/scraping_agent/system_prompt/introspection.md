@@ -1,10 +1,10 @@
-Check whether the research is complete.
+Check the research progress.
 
 Objective:
 
 {objective}
 
-Current state:
+Current research state:
 
 {state}
 
@@ -12,11 +12,11 @@ New findings:
 
 {result}
 
-For each unresolved requirement:
-- Remove it only if the findings provide enough evidence.
+For each unresolved task:
+- Remove it only if the findings provide enough evidence to answer it.
 - Otherwise keep it.
+- Do not add tasks.
 
-Do not add requirements.
+Return the complete unresolved task list.
 
-Return all unresolved requirements.
-If everything is resolved, return an empty list.
+If all tasks are answered, return an empty list.

@@ -1,21 +1,20 @@
-The previous attempt failed.
+The previous research attempt failed.
 
-Try the research again using a different approach.
+Retry these tasks:
 
-Objective:
+{unresolved}
 
-{objective}
-
-Current state:
+Current research state:
 
 {state}
 
 Rules:
-- Focus on unresolved requirements.
-- Try a different search or source.
-- Do not repeat failed approaches unnecessarily.
-- Do not guess.
-- Record the URL for every finding.
-- Return only new findings.
+- Use a different search or source.
+- Focus only on these tasks.
+- Do not repeat the failed approach unnecessarily.
+- Do not guess or invent information.
+- Only report new findings.
+- Include the source URL with every finding.
+- Do not decide whether a task is complete.
 
 Return the structured research result.

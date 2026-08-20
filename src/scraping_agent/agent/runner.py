@@ -15,7 +15,7 @@
 from importlib.resources import files
 from browser_use import Agent, Browser, ChatOllama
 from browser_use.llm.messages import UserMessage
-from scraping_agent.agent.schema import ResearchResult, ResearchState, IntrospectionResult
+from scraping_agent.agent.schema import ResearchResult, ResearchState, IntrospectionResult, PlanningResult
 
 def get_system_prompt(name : str = "system.md") -> str:
     prompt_path = files("scraping_agent.system_prompt").joinpath(name)
@@ -26,12 +26,17 @@ def create_task(state: ResearchState, retry: bool = False) -> str:
         research_template = get_system_prompt("retry.md")
     else:
         research_template = get_system_prompt("research.md")
-    new_task = research_template.format(objective=state.objective, state=state.model_dump_json(indent=2))
+    new_task = research_template.format(unresolved=state.unresolved, state=state.model_dump_json(indent=2))
     return new_task
 
 def create_introspection_task(state: ResearchState, result: ResearchResult) -> str:
     introspection_template = get_system_prompt("introspection.md")
     new_task = introspection_template.format(objective=state.objective, state=state.model_dump_json(indent=2), result=result.model_dump_json(indent=2))
+    return new_task
+
+def create_plan_task(objective: str) -> str:
+    plan_template = get_system_prompt("plan.md")
+    new_task = plan_template.format(objective=objective)
     return new_task
 
 def check_research_completion(state: ResearchState, max_iterations: int) -> bool:
@@ -51,8 +56,19 @@ async def run_introspection(task: str, llm: ChatOllama) -> IntrospectionResult |
     except Exception as e:
         return None
 
+async def run_planning(task: str, llm: ChatOllama) -> PlanningResult | None:
+    try:
+        response = await llm.ainvoke([UserMessage(content=task)], output_format=PlanningResult)
+        return response.completion
+    except Exception as e:
+        return None
+
 async def research(task: str, llm: ChatOllama, browser: Browser, extend_system_message: str | None = None, use_thinking: bool = False, use_vision: bool = False, use_judge: bool = False, llm_timeout: int = 300, step_timeout: int = 720, max_actions_per_step: int = 5, max_steps: int = 25, max_iterations: int = 5, max_retries: int = 3) -> ResearchState:
     state = ResearchState(objective=task, unresolved=[task])
+    current_plan_task = create_plan_task(task)
+    planning_result = await run_planning(current_plan_task, llm)
+    if planning_result is not None and planning_result.unresolved:
+        state.unresolved = planning_result.unresolved
     retry = False
     while not check_research_completion(state, max_iterations):
         current_task = create_task(state, retry)
